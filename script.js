@@ -13,17 +13,17 @@ const perguntas = [
   {
     pergunta: "Qual é o método em JavaScript usado para remover o último elemento de um array?",
     alternativas: [".pop()", ".push()", ".remove()", ".shift()"],
-    correta: 1
+    correta: 0
   },
   {
     pergunta: "Qual é a função do método 'querySelector' em JavaScript?",
     alternativas: ["Selecionar um elemento pelo ID", "Selecionar um elemento pelo nome da classe", "Selecionar um elemento pelo seletor CSS", "Selecionar um elemento pelo nome da tag"],
-    correta: 3
+    correta: 2
   },
   {
     pergunta: "Qual é a função do operador '===' em JavaScript?",
     alternativas: ["Comparação estrita (igualdade em valor e tipo)", "Atribuição", "Comparação solta (igualdade em valor, mas não em tipo)", "Nenhuma das anteriores"],
-    correta: 1
+    correta: 0
   },
   {
     pergunta: "Qual é o resultado da expressão 4 + '5' em JavaScript?",
@@ -38,17 +38,17 @@ const perguntas = [
   {
     pergunta: "Qual método JavaScript é usado para arredondar um número para a próxima inteiro mais próximo?",
     alternativas: [".ceil()", ".floor()", ".round()", ".toFixed()"],
-    correta: 3
+    correta: 2
   },
   {
     pergunta: "O que o método 'addEventListener' faz em JavaScript?",
     alternativas: ["Adiciona um evento a um elemento", "Remove um evento de um elemento", "Executa um evento", "Nenhuma das anteriores"],
-    correta: 1
+    correta: 0
   },
   {
     pergunta: "Qual é o operador lógico 'E' em JavaScript?",
     alternativas: ["&&", "||", "!", "=="],
-    correta: 1
+    correta: 0
   }
 ];
 
@@ -57,6 +57,12 @@ const quiz = document
   .querySelector('#quiz');
 const template = document
   .querySelector('template');
+
+const corretas = new Set();
+const totalPerguntas = perguntas.length;
+const mostrarTotal = document.querySelector('#acertos span')
+
+mostrarTotal.textContent = `${corretas.size} de ${totalPerguntas}` 
 
 // para cada item de perguntas faça 
 for(const item of perguntas){
@@ -81,6 +87,29 @@ for(const item of perguntas){
     dt
     .querySelector('span')
     .textContent = resposta;
+
+    dt
+    .querySelector('input')
+    .setAttribute('name', 'pergunta-'+perguntas.indexOf(item));
+
+    dt
+      .querySelector('input')
+      .value = item.alternativas
+      .indexOf(resposta);
+
+    dt
+      .querySelector('input')
+      .onchange = (event) => {
+        const respostaCorreta = event.target.value == item.correta;
+
+        corretas.delete(item);
+        if(respostaCorreta){
+           corretas.add(item)
+        }
+
+        mostrarTotal.textContent = `${corretas.size} de ${totalPerguntas}` 
+      }
+    
 
     // adiciona o clone da alternativa ao clone da pergunta
     quizItem
